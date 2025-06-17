@@ -54,6 +54,7 @@ module OneLogin
       attr_accessor :compress_request
       attr_accessor :compress_response
       attr_accessor :double_quote_xml_attribute_values
+      attr_accessor :double_quote_xml_prologue
       attr_accessor :message_max_bytesize
       attr_accessor :check_malformed_doc
       attr_accessor :passive
@@ -284,7 +285,7 @@ module OneLogin
         :soft                                      => true,
         :check_malformed_doc                       => true,
         :double_quote_xml_attribute_values         => false,
-        
+        :double_quote_xml_prologue                 => false,
         :security                                  => {
           :authn_requests_signed      => false,
           :logout_requests_signed     => false,
@@ -383,4 +384,3 @@ module OneLogin
     end
   end
 end
-
