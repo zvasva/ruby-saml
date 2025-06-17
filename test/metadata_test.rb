@@ -159,6 +159,31 @@ class MetadataTest < Minitest::Test
           assert validate_xml!(xml_text, "saml-schema-metadata-2.0.xsd")
         end
       end
+
+      describe "double quoting xml prologue" do
+        before do
+          settings.double_quote_xml_prologue = true
+        end
+
+        it "generates meta with double quoted prologue" do
+          xml_text = OneLogin::RubySaml::Metadata.new.generate(settings, true)
+
+          start = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<md:EntityDescriptor"
+          assert_equal xml_text[0..start.length-1], start
+        end
+      end
+
+      describe "double quoting xml attribute values" do
+        before do
+          settings.double_quote_xml_attribute_values = true
+        end
+
+        it "generates meta with double quoted attribute values" do
+          xml_text = OneLogin::RubySaml::Metadata.new.generate(settings, true)
+
+          assert(xml_text.include?('entityID="https://example.com"'))
+        end
+      end
     end
 
     describe "with a future SP certificate" do
@@ -399,6 +424,25 @@ class MetadataTest < Minitest::Test
           assert_match %r[<ds:SignatureValue>([a-zA-Z0-9/+=]+)</ds:SignatureValue>]m, xml_text
           assert_match %r[<ds:SignatureMethod Algorithm='http://www.w3.org/2000/09/xmldsig#rsa-sha1'/>], xml_text
           assert_match %r[<ds:DigestMethod Algorithm='http://www.w3.org/2000/09/xmldsig#sha1'/>], xml_text
+
+          signed_metadata = XMLSecurity::SignedDocument.new(xml_text)
+          assert signed_metadata.validate_document(ruby_saml_cert_fingerprint, false)
+
+          assert validate_xml!(xml_text, "saml-schema-metadata-2.0.xsd")
+        end
+      end
+
+      describe "when double quoted attribute values is set" do
+        before do
+          settings.double_quote_xml_attribute_values = true
+        end
+        after do
+          settings.double_quote_xml_attribute_values = false
+        end
+
+        it "double quotes the signature" do
+          assert_match %r[<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>], xml_text
+          assert_match %r[<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>], xml_text
 
           signed_metadata = XMLSecurity::SignedDocument.new(xml_text)
           assert signed_metadata.validate_document(ruby_saml_cert_fingerprint, false)
