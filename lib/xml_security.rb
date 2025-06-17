@@ -183,6 +183,9 @@ module XMLSecurity
         certificate = OpenSSL::X509::Certificate.new(certificate)
       end
       x509_cert_element.text = Base64.encode64(certificate.to_der).gsub(/\n/, "")
+      key_name_element       = key_info_element.add_element("ds:KeyName")
+      fingerprint            = OpenSSL::Digest::SHA1.hexdigest(certificate.to_der)
+      key_name_element.text  = fingerprint
 
       # add the signature
       issuer_element = elements["//saml:Issuer"]
