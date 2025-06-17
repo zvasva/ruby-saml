@@ -147,7 +147,7 @@ module XMLSecurity
     def sign_document(private_key, certificate, signature_method = RSA_SHA1, digest_method = SHA1, check_malformed_doc = true)
       noko = XMLSecurity::BaseDocument.safe_load_xml(self.to_s, check_malformed_doc)
 
-      signature_element = REXML::Element.new("ds:Signature").add_namespace('ds', DSIG)
+      signature_element = REXML::Element.new("ds:Signature", nil, context).add_namespace('ds', DSIG)
       signed_info_element = signature_element.add_element("ds:SignedInfo")
       signed_info_element.add_element("ds:CanonicalizationMethod", {"Algorithm" => C14N})
       signed_info_element.add_element("ds:SignatureMethod", {"Algorithm"=>signature_method})
@@ -400,8 +400,8 @@ module XMLSecurity
         cache_referenced_xml(soft)
       end
 
-      return append_error("No Signature Algorithm Method found", soft) if @signature_algorithm.nil?  
-      return append_error("No Signature node found", soft) if @signature.nil?  
+      return append_error("No Signature Algorithm Method found", soft) if @signature_algorithm.nil?
+      return append_error("No Signature node found", soft) if @signature.nil?
       return append_error("No canonized SignedInfo ", soft) if @cached_signed_info.nil?
       return append_error("No Reference node found", soft) if @ref.nil?
       return append_error("No referenced XML", soft) if @referenced_xml.nil?
