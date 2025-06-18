@@ -106,7 +106,7 @@ module OneLogin
             "index" => settings.attribute_consuming_service.index
           }
           srv_name = sp_acs.add_element "md:ServiceName", {
-            "xml:lang" => "en"
+            "xml:lang" => settings.attribute_consuming_service.language || "en"
           }
           srv_name.text = settings.attribute_consuming_service.name
           settings.attribute_consuming_service.attributes.each do |attribute|

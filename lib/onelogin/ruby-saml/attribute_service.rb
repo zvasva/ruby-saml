@@ -7,6 +7,7 @@ module OneLogin
       attr_reader :attributes
       attr_reader :name
       attr_reader :index
+      attr_reader :language
 
       # Initializes the AttributeService, set the index value as 1 and an empty array as attributes
       #
@@ -37,6 +38,13 @@ module OneLogin
       #
       def service_index(index)
         @index = index
+      end
+
+      # Set a language to the service
+      # @param language [String] A language
+      #
+      def service_language(language)
+        @language = language
       end
 
       # Add an AttributeService
