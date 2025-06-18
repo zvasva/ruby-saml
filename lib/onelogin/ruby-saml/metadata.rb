@@ -166,6 +166,8 @@ module OneLogin
         cert_text = Base64.encode64(cert.to_der).gsub("\n", '')
         kd = sp_sso.add_element "md:KeyDescriptor", { "use" => use.to_s }
         ki = kd.add_element "ds:KeyInfo", { "xmlns:ds" => "http://www.w3.org/2000/09/xmldsig#" }
+        key_name_element = ki.add_element("ds:KeyName")
+        key_name_element.text = OpenSSL::Digest::SHA1.hexdigest(cert.to_der)
         xd = ki.add_element "ds:X509Data"
         xc = xd.add_element "ds:X509Certificate"
         xc.text = cert_text
