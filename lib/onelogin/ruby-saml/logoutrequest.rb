@@ -142,7 +142,7 @@ module OneLogin
         # embed signature
         cert, private_key = settings.get_sp_signing_pair
         if settings.idp_slo_service_binding == Utils::BINDINGS[:post] && settings.security[:logout_requests_signed] && private_key && cert
-          document.sign_document(private_key, cert, settings.security[:signature_method], settings.security[:digest_method])
+          document.sign_document(private_key, cert, settings, settings.security[:signature_method], settings.security[:digest_method])
         end
 
         document

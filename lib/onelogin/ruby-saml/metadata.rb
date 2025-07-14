@@ -143,7 +143,7 @@ module OneLogin
         cert, private_key = settings.get_sp_signing_pair
         return unless private_key && cert
 
-        meta_doc.sign_document(private_key, cert, settings.security[:signature_method], settings.security[:digest_method])
+        meta_doc.sign_document(private_key, cert, settings, settings.security[:signature_method], settings.security[:digest_method])
       end
 
       def output_xml(meta_doc, pretty_print)

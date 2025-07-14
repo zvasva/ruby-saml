@@ -144,7 +144,7 @@ module XMLSecurity
       #<KeyInfo />
       #<Object />
     #</Signature>
-    def sign_document(private_key, certificate, signature_method = RSA_SHA1, digest_method = SHA1, check_malformed_doc = true)
+    def sign_document(private_key, certificate, settings = nil, signature_method = RSA_SHA1, digest_method = SHA1, check_malformed_doc = true)
       noko = XMLSecurity::BaseDocument.safe_load_xml(self.to_s, check_malformed_doc)
 
       signature_element = REXML::Element.new("ds:Signature", nil, context).add_namespace('ds', DSIG)
@@ -183,9 +183,11 @@ module XMLSecurity
         certificate = OpenSSL::X509::Certificate.new(certificate)
       end
       x509_cert_element.text = Base64.encode64(certificate.to_der).gsub(/\n/, "")
-      key_name_element       = key_info_element.add_element("ds:KeyName")
-      fingerprint            = OpenSSL::Digest::SHA1.hexdigest(certificate.to_der)
-      key_name_element.text  = fingerprint
+      if settings && settings.security[:add_key_name]
+        key_name_element       = key_info_element.add_element("ds:KeyName")
+        fingerprint            = OpenSSL::Digest::SHA1.hexdigest(certificate.to_der)
+        key_name_element.text  = fingerprint
+      end
 
       # add the signature
       issuer_element = elements["//saml:Issuer"]

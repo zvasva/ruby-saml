@@ -301,7 +301,8 @@ module OneLogin
           :check_idp_cert_expiration  => false,
           :check_sp_cert_expiration   => false,
           :strict_audience_validation => false,
-          :lowercase_url_encoding     => false
+          :lowercase_url_encoding     => false,
+          :add_key_name               => false
         }.freeze
       }.freeze
 
