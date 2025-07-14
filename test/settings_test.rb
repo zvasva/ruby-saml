@@ -16,7 +16,7 @@ class SettingsTest < Minitest::Test
         :idp_cert, :idp_cert_fingerprint, :idp_cert_fingerprint_algorithm, :idp_cert_multi,
         :idp_attribute_names, :issuer, :assertion_consumer_service_url, :single_logout_service_url,
         :sp_name_qualifier, :name_identifier_format, :name_identifier_value, :name_identifier_value_requested,
-        :sessionindex, :attributes_index, :passive, :force_authn,
+        :sessionindex, :attributes_index, :assertion_attributes_index, :passive, :force_authn,
         :compress_request, :double_quote_xml_attribute_values, :double_quote_xml_prologue, :message_max_bytesize,
         :security, :certificate, :private_key, :certificate_new, :sp_cert_multi,
         :authn_context, :authn_context_comparison, :authn_context_decl_ref,
@@ -93,6 +93,7 @@ class SettingsTest < Minitest::Test
           :valid_until => '2029-04-16T03:35:08.277Z',
           :name_identifier_format => "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
           :attributes_index => 30,
+          :assertion_attributes_index => 31,
           :passive => true,
           :protocol_binding => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
       }

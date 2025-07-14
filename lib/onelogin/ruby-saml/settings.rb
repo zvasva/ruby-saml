@@ -60,6 +60,7 @@ module OneLogin
       attr_accessor :passive
       attr_reader   :protocol_binding
       attr_accessor :attributes_index
+      attr_accessor :assertion_attributes_index
       attr_accessor :force_authn
       attr_accessor :certificate
       attr_accessor :private_key
