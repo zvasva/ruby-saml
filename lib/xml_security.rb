@@ -177,12 +177,14 @@ module XMLSecurity
 
       # add KeyInfo
       key_info_element       = signature_element.add_element("ds:KeyInfo")
-      x509_element           = key_info_element.add_element("ds:X509Data")
-      x509_cert_element      = x509_element.add_element("ds:X509Certificate")
-      if certificate.is_a?(String)
-        certificate = OpenSSL::X509::Certificate.new(certificate)
+      unless settings && settings.security[:add_certificate] == false
+        x509_element           = key_info_element.add_element("ds:X509Data")
+        x509_cert_element      = x509_element.add_element("ds:X509Certificate")
+        if certificate.is_a?(String)
+          certificate = OpenSSL::X509::Certificate.new(certificate)
+        end
+        x509_cert_element.text = Base64.encode64(certificate.to_der).gsub(/\n/, "")
       end
-      x509_cert_element.text = Base64.encode64(certificate.to_der).gsub(/\n/, "")
       if settings && settings.security[:add_key_name]
         key_name_element       = key_info_element.add_element("ds:KeyName")
         fingerprint            = OpenSSL::Digest::SHA1.hexdigest(certificate.to_der)
