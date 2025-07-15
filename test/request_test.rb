@@ -430,6 +430,24 @@ class RequestTest < Minitest::Test
       assert auth_doc.to_s =~ /<saml:AuthnContextDeclRef>example\/decl\/ref<\/saml:AuthnContextDeclRef>/
     end
 
+    it "create the samlp:Extensions element correctly" do
+      settings.authn_request_extensions = [
+        { name: "foo", value: "bar" },
+        { name: "baz", value: "quux" }
+      ]
+      auth_doc = OneLogin::RubySaml::Authrequest.new.create_authentication_xml_doc(settings)
+      assert auth_doc.to_s =~ /<samlp:Extensions>/
+      assert auth_doc.to_s =~ /<saml:Attribute Name='foo'>/
+      assert auth_doc.to_s =~ /<saml:AttributeValue>bar<\/saml:AttributeValue>/
+      assert auth_doc.to_s =~ /<saml:Attribute Name='baz'>/
+      assert auth_doc.to_s =~ /<saml:AttributeValue>quux<\/saml:AttributeValue>/
+    end
+
+    it "does not create samlp:Extensions element when not configured" do
+      auth_doc = OneLogin::RubySaml::Authrequest.new.create_authentication_xml_doc(settings)
+      refute_match /<samlp:Extensions>/, auth_doc.to_s
+    end
+
     describe "DEPRECATED: #create_params signing with HTTP-POST binding via :embed_sign" do
       before do
         settings.compress_request = false

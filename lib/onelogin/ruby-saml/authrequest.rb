@@ -130,6 +130,17 @@ module OneLogin
           issuer.text = settings.sp_entity_id
         end
 
+        if settings.authn_request_extensions && !settings.authn_request_extensions.empty?
+          extensions = root.add_element "samlp:Extensions"
+          settings.authn_request_extensions.each do |extension|
+            if extension.is_a?(Hash) && extension[:name] && extension[:value]
+              attr = extensions.add_element "saml:Attribute", { "Name" => extension[:name] }
+              attr_value = attr.add_element "saml:AttributeValue"
+              attr_value.text = extension[:value]
+            end
+          end
+        end
+
         if settings.name_identifier_value_requested != nil
           subject = root.add_element "saml:Subject"
 
